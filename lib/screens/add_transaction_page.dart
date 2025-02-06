@@ -64,7 +64,13 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Tambah Transaksi')),
+      appBar: AppBar(
+        title: const Text(
+          'Tambah Transaksi Barang',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.lightBlue,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

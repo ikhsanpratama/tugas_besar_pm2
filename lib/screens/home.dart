@@ -146,50 +146,59 @@ class HomePage extends StatelessWidget {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 10.0,
-            mainAxisSpacing: 10.0,
-            childAspectRatio: 1.0,
-          ),
-          itemCount: gridItems.length,
-          itemBuilder: (context, index) {
-            final item = gridItems[index];
-            return Card(
-              semanticContainer: true,
-              color: item['color'],
-              elevation: 10,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(60),
+        padding: const EdgeInsets.all(0.0),
+        child: Container(
+          decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/background.png'),
+                fit: BoxFit.cover,
               ),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => item['page']),
-                  );
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      item['icon'],
-                      size: 100,
-                      color: Colors.white,
-                      applyTextScaling: true,
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      item['title'],
-                      style: const TextStyle(color: Colors.white, fontSize: 18),
-                    ),
-                  ],
+            ),
+          child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: 10.0,
+              mainAxisSpacing: 10.0,
+              childAspectRatio: 1.0,
+            ),
+            itemCount: gridItems.length,
+            itemBuilder: (context, index) {
+              final item = gridItems[index];
+              return Card(
+                semanticContainer: true,
+                color: item['color'],
+                elevation: 10,
+                margin: const EdgeInsets.all(10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
                 ),
-              ),
-            );
-          },
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => item['page']),
+                    );
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        item['icon'],
+                        size: 50,
+                        color: Colors.white,
+                        applyTextScaling: true,
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        item['title'],
+                        style: const TextStyle(color: Colors.white, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

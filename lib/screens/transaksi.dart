@@ -34,7 +34,13 @@ class _TransactionsPageState extends State<TransactionsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Daftar Transaksi Barang')),
+      appBar: AppBar(
+        title: const Text(
+          'Transaksi Barang',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.lightBlue,
+      ),
       body: transactions.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(

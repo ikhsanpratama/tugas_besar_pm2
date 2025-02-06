@@ -79,8 +79,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Image.asset(
                   "assets/inventory.png",
                   fit: BoxFit.cover,
-                  height: 300,
-                  width: 300,
+                  height: 250,
+                  width: 400,
                   alignment: Alignment.center,
                 )
               ),

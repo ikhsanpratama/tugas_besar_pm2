@@ -43,7 +43,7 @@ class _CategoryFormScreenState extends State<CategoryFormScreen> {
         });
         Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => CategoryListScreen()),
+                  MaterialPageRoute(builder: (context) => const CategoryListScreen()),
                 );
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Tambah Kategori Berhasil')));
       }catch(e){
@@ -57,7 +57,7 @@ class _CategoryFormScreenState extends State<CategoryFormScreen> {
             }).eq('id', widget.category!['id']);
       Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => CategoryListScreen()),
+                  MaterialPageRoute(builder: (context) => const CategoryListScreen()),
                 );
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Update Kategori Berhasil')));
       }catch(e){
@@ -71,7 +71,11 @@ class _CategoryFormScreenState extends State<CategoryFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.category == null ? 'Add Category' : 'Edit Category')),
+      appBar: AppBar(
+        title: Text(widget.category == null ? 'Tambah Kategori' : 'Edit Kategori'),
+        backgroundColor: Colors.lightBlue,
+      ),
+      // appBar: AppBar(title: Text(widget.category == null ? 'Add Category' : 'Edit Category')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -79,12 +83,12 @@ class _CategoryFormScreenState extends State<CategoryFormScreen> {
           children: [
             TextField(
               controller: _nameController,
-              decoration: const InputDecoration(labelText: 'Category Name'),
+              decoration: const InputDecoration(labelText: 'Kategori'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: saveCategory,
-              child: Text(widget.category == null ? 'Add Category' : 'Update Category'),
+              child: Text(widget.category == null ? 'Tambah Kategori' : 'Edit Kategori'),
             ),
           ],
         ),

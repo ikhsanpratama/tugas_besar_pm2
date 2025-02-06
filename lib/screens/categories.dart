@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tugas_besar_pm2/screens/category_form.dart';
@@ -70,7 +72,7 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
     final response = await Supabase.instance.client.from('categories').delete().eq('id', id);
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => CategoryListScreen()),
+      MaterialPageRoute(builder: (context) => const CategoryListScreen()),
     );
   }
 

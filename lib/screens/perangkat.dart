@@ -121,7 +121,13 @@ class _ItemsPageState extends State<ItemsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Manajemen Barang')),
+      appBar: AppBar(
+        title: const Text(
+          'Manajemen Barang',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.lightBlue,
+      ),
       body: items.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(

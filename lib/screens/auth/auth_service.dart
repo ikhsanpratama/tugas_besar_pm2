@@ -28,36 +28,29 @@ class AuthService {
   }
 
   // get user
-  String? getUserEmail() {
+  String? getUserid() {
     final session = _supabase.auth.currentUser;
-    final useremail  = session?.email;        
-    return useremail;
-  } 
+    final userId = session?.id;
+    return userId;
+  }
 
   Future<String?> getUserName() async {
     final session = _supabase.auth.currentSession;
     final user = session?.user;
-      if (user == null) return null;
-      
-      final response = await _supabase
-          .from('users')
-          .select('name')
-          .eq('id', user.id)
-          .single();
-      return response['name'] as String?;
-  } 
+    if (user == null) return null;
+
+    final response =
+        await _supabase.from('users').select('name').eq('id', user.id).single();
+    return response['name'] as String?;
+  }
 
   Future<String?> getUserRole() async {
     final session = _supabase.auth.currentSession;
     final user = session?.user;
-      if (user == null) return null;
-      
-      final response = await _supabase
-          .from('users')
-          .select('role')
-          .eq('id', user.id)
-          .single();
-      return response['role'] as String?;
-  } 
+    if (user == null) return null;
 
+    final response =
+        await _supabase.from('users').select('role').eq('id', user.id).single();
+    return response['role'] as String?;
+  }
 }

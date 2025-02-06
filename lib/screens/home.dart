@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:tugas_besar_pm2/screens/about.dart';
 import 'package:tugas_besar_pm2/screens/account/user_management.dart';
 import 'package:tugas_besar_pm2/screens/auth/auth_service.dart';
 import 'package:tugas_besar_pm2/screens/categories.dart';
+import 'package:tugas_besar_pm2/screens/devices/device_list_page.dart';
 // import 'package:tugas_besar_pm2/screens/about.dart';
 // import 'package:tugas_besar_pm2/screens/category_form.dart';
 import 'package:tugas_besar_pm2/screens/opname.dart';
@@ -12,6 +14,18 @@ import 'package:tugas_besar_pm2/screens/transaksi.dart';
 class HomePage extends StatelessWidget {
   final List<Map<String, dynamic>> gridItems = [
     {
+      'title': 'Kategori Perangkat',
+      'icon': Icons.data_usage,
+      'color': Colors.redAccent,
+      'page': const CategoryListScreen()
+    },
+    {
+      'title': 'Perangkat',
+      'icon': Icons.data_usage,
+      'color': Colors.redAccent,
+      'page': const DeviceListPage()
+    },
+    {
       'title': 'Status Perangkat',
       'icon': Icons.data_usage,
       'color': Colors.redAccent,
@@ -21,7 +35,9 @@ class HomePage extends StatelessWidget {
       'title': 'Transaksi',
       'icon': Icons.pin_end_sharp,
       'color': Colors.amber,
-      'page': const TransactionsPage()
+      'page': const TransactionPage(
+        currentUserId: '',
+      )
     },
     {
       'title': 'Maintenance',
@@ -39,7 +55,7 @@ class HomePage extends StatelessWidget {
   HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -65,27 +81,29 @@ class HomePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   FutureBuilder<String?>(
-                    future: authService.getUserName(), 
-                    builder: (context,snapshot){
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
-                      }
-                      if (snapshot.hasError || snapshot.data == null) {
-                        return const Text('Gagal mengambil nama pengguna');
-                      }
-                      return Text('User : ${snapshot.data}');
-                    }),                  
+                      future: authService.getUserName(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        }
+                        if (snapshot.hasError || snapshot.data == null) {
+                          return const Text('Gagal mengambil nama pengguna');
+                        }
+                        return Text('User : ${snapshot.data}');
+                      }),
                   FutureBuilder<String?>(
-                    future: authService.getUserRole(), 
-                    builder: (context,snapshot){
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
-                      }
-                      if (snapshot.hasError || snapshot.data == null) {
-                        return const Text('Gagal mengambil role pengguna');
-                      }
-                      return Text('Jabatan : ${snapshot.data}');
-                    }),
+                      future: authService.getUserRole(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        }
+                        if (snapshot.hasError || snapshot.data == null) {
+                          return const Text('Gagal mengambil role pengguna');
+                        }
+                        return Text('Jabatan : ${snapshot.data}');
+                      }),
                 ],
               ),
             ),
@@ -95,7 +113,7 @@ class HomePage extends StatelessWidget {
               selectedTileColor: Colors.lightBlue,
               enabled: false,
               title: const Text(
-                'Beranda',
+                'Dashboard',
                 style:
                     TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
               ),
@@ -104,33 +122,25 @@ class HomePage extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.devices),
-              title: const Text('Perangkat'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ItemsPage()),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.privacy_tip),
-              title: const Text('Kategori Perangkat'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const CategoryListScreen()),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.privacy_tip),
+              leading: const Icon(Icons.people),
               title: const Text('Pengguna'),
               // trailing: current,
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const UserManagementPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const UserManagementPage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.info),
+              title: const Text('Tentang'),
+              // trailing: current,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AboutUts()),
                 );
               },
             ),
@@ -149,11 +159,11 @@ class HomePage extends StatelessWidget {
         padding: const EdgeInsets.all(0.0),
         child: Container(
           decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/background.png'),
-                fit: BoxFit.cover,
-              ),
+            image: DecorationImage(
+              image: AssetImage('assets/background.png'),
+              fit: BoxFit.cover,
             ),
+          ),
           child: GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
@@ -191,7 +201,8 @@ class HomePage extends StatelessWidget {
                       const SizedBox(height: 10),
                       Text(
                         item['title'],
-                        style: const TextStyle(color: Colors.white, fontSize: 12),
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 12),
                       ),
                     ],
                   ),

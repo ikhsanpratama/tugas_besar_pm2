@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:tugas_besar_pm2/screens/account/user_management.dart';
 import 'package:tugas_besar_pm2/screens/auth/auth_service.dart';
-import 'package:tugas_besar_pm2/screens/about.dart';
+import 'package:tugas_besar_pm2/screens/categories.dart';
+// import 'package:tugas_besar_pm2/screens/about.dart';
+// import 'package:tugas_besar_pm2/screens/category_form.dart';
 import 'package:tugas_besar_pm2/screens/opname.dart';
 import 'package:tugas_besar_pm2/screens/perangkat.dart';
 import 'package:tugas_besar_pm2/screens/status.dart';
@@ -16,13 +19,13 @@ class HomePage extends StatelessWidget {
     },
     {
       'title': 'Transaksi',
-      'icon': Icons.receipt,
+      'icon': Icons.pin_end_sharp,
       'color': Colors.amber,
-      'page': const TransaksiPerangkat()
+      'page': const TransactionsPage()
     },
     {
-      'title': 'Jadwal Opname',
-      'icon': Icons.event_note,
+      'title': 'Maintenance',
+      'icon': Icons.widgets,
       'color': Colors.green,
       'page': const OpnamePerangkat()
     },
@@ -36,8 +39,7 @@ class HomePage extends StatelessWidget {
   HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final userEmail = authService.getUserEmail();
+  Widget build(BuildContext context) {    
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -62,17 +64,28 @@ class HomePage extends StatelessWidget {
                     backgroundImage: AssetImage('assets/user.png'),
                   ),
                   const SizedBox(height: 10),
-                  Text(
-                    userEmail.toString(),
-                    style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  const Text(
-                    'Warehouse Manager',
-                    style: TextStyle(color: Colors.black, fontSize: 14),
-                  ),
+                  FutureBuilder<String?>(
+                    future: authService.getUserName(), 
+                    builder: (context,snapshot){
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      }
+                      if (snapshot.hasError || snapshot.data == null) {
+                        return const Text('Gagal mengambil nama pengguna');
+                      }
+                      return Text('User : ${snapshot.data}');
+                    }),                  
+                  FutureBuilder<String?>(
+                    future: authService.getUserRole(), 
+                    builder: (context,snapshot){
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      }
+                      if (snapshot.hasError || snapshot.data == null) {
+                        return const Text('Gagal mengambil role pengguna');
+                      }
+                      return Text('Jabatan : ${snapshot.data}');
+                    }),
                 ],
               ),
             ),
@@ -96,20 +109,32 @@ class HomePage extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Perangkat()),
+                  MaterialPageRoute(builder: (context) => const ItemsPage()),
                 );
               },
             ),
             ListTile(
               leading: const Icon(Icons.privacy_tip),
-              title: const Text('Tentang'),
+              title: const Text('Kategori Perangkat'),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const AboutUts()),
+                  MaterialPageRoute(builder: (context) => const CategoryListScreen()),
                 );
               },
             ),
+            ListTile(
+              leading: const Icon(Icons.privacy_tip),
+              title: const Text('Pengguna'),
+              // trailing: current,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const UserManagementPage()),
+                );
+              },
+            ),
+            const Divider(),
             const Divider(),
             ListTile(
               leading: const Icon(Icons.logout_outlined),

@@ -75,13 +75,14 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(
                 height: 20.h,
               ),
-              const Center(
-                child: CircleAvatar(
-                  // radius: 100,
-                  minRadius: 60,
-                  maxRadius: 100,
-                  backgroundImage: AssetImage('assets/inventory.png'),
-                ),
+              Center(
+                child: Image.asset(
+                  "assets/inventory.png",
+                  fit: BoxFit.cover,
+                  height: 300,
+                  width: 300,
+                  alignment: Alignment.center,
+                )
               ),
               SizedBox(
                 height: 20.h,

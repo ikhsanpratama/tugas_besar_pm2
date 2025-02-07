@@ -28,7 +28,7 @@ class _DeviceListPageState extends State<DeviceListPage> {
         .from('items')
         .select('id, name, description, status, categories(name)');
 
-    if (response != null && response.isNotEmpty) {
+    if (response.isNotEmpty) {
       Map<String, List<Map<String, dynamic>>> groupedDevices = {};
 
       for (var item in response) {
@@ -103,7 +103,7 @@ class _DeviceListPageState extends State<DeviceListPage> {
                     );
                   },
                 ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton(        
         onPressed: () => Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const DeviceAddPage()),

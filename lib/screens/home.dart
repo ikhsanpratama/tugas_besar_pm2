@@ -12,19 +12,19 @@ class HomePage extends StatelessWidget {
   final List<Map<String, dynamic>> gridItems = [
     {
       'title': 'Kategori Perangkat',
-      'icon': Icons.data_usage,
-      'color': Colors.redAccent,
+      'icon': Icons.format_list_numbered,
+      'color': const Color.fromARGB(255, 45, 75, 245),
       'page': const CategoryListScreen()
     },
     {
       'title': 'Perangkat',
-      'icon': Icons.data_usage,
-      'color': Colors.redAccent,
+      'icon': Icons.phonelink,
+      'color': const Color.fromARGB(255, 226, 113, 7),
       'page': const DeviceListPage()
     },
     {
       'title': 'Status Perangkat',
-      'icon': Icons.data_usage,
+      'icon': Icons.pie_chart_outline,
       'color': Colors.redAccent,
       'page': const DeviceStatisticsPage()
     },
@@ -32,13 +32,11 @@ class HomePage extends StatelessWidget {
       'title': 'Transaksi',
       'icon': Icons.pin_end_sharp,
       'color': Colors.amber,
-      'page': const TransactionPage(
-        currentUserId: '',
-      )
+      'page': const TransactionReportPage()
     },
     {
       'title': 'Maintenance',
-      'icon': Icons.widgets,
+      'icon': Icons.build,
       'color': Colors.green,
       'page': const MaintenanceHistoryPage()
     },
@@ -69,43 +67,45 @@ class HomePage extends StatelessWidget {
               decoration: const BoxDecoration(
                 color: Colors.transparent,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const CircleAvatar(
-                    radius: 30,
-                    backgroundImage: AssetImage('assets/user.png'),
-                  ),
-                  const SizedBox(height: 10),
-                  FutureBuilder<String?>(
-                      future: authService.getUserName(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        }
-                        if (snapshot.hasError || snapshot.data == null) {
-                          return const Text('Gagal mengambil nama pengguna');
-                        }
-                        return Text('User : ${snapshot.data}');
-                      }),
-                  FutureBuilder<String?>(
-                      future: authService.getUserRole(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        }
-                        if (snapshot.hasError || snapshot.data == null) {
-                          return const Text('Gagal mengambil role pengguna');
-                        }
-                        return Text('Jabatan : ${snapshot.data}');
-                      }),
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const CircleAvatar(
+                      radius: 30,
+                      backgroundImage: AssetImage('assets/user.png'),
+                    ),
+                    const SizedBox(height: 10),
+                    FutureBuilder<String?>(
+                        future: authService.getUserName(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          }
+                          if (snapshot.hasError || snapshot.data == null) {
+                            return const Text('Gagal mengambil nama pengguna');
+                          }
+                          return Text('User : ${snapshot.data}');
+                        }),
+                    FutureBuilder<String?>(
+                        future: authService.getUserRole(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          }
+                          if (snapshot.hasError || snapshot.data == null) {
+                            return const Text('Gagal mengambil role pengguna');
+                          }
+                          return Text('Jabatan : ${snapshot.data}');
+                        }),
+                  ],
+                ),
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.store),
+              leading: const Icon(Icons.web),
               selected: true,
               selectedTileColor: Colors.lightBlue,
               enabled: false,
@@ -131,7 +131,7 @@ class HomePage extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.info),
+              leading: const Icon(Icons.help_outline),
               title: const Text('Tentang'),
               // trailing: current,
               onTap: () {
@@ -208,7 +208,7 @@ class HomePage extends StatelessWidget {
             },
           ),
         ),
-      ),
+      ),      
     );
   }
 }

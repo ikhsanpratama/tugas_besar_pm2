@@ -115,7 +115,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           filled: true,
                           fillColor: Colors.white.withOpacity(0.2),
                           hintText: 'Nama',
-                          hintStyle: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+                          hintStyle: const TextStyle(color: Color.fromARGB(255, 193, 212, 221), fontStyle: FontStyle.italic),
                           prefixIcon:
                               const Icon(Icons.person, color: Colors.blue),
                           border: OutlineInputBorder(
@@ -141,7 +141,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           filled: true,
                           fillColor: Colors.white.withOpacity(0.2),
                           hintText: 'Email',
-                          hintStyle: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+                          hintStyle: const TextStyle(color: Color.fromARGB(255, 193, 212, 221), fontStyle: FontStyle.italic),
                           prefixIcon: const Icon(Icons.email, color: Colors.blue),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15.0),
@@ -168,7 +168,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           filled: true,
                           fillColor: Colors.white.withOpacity(0.2),
                           hintText: 'Password',
-                          hintStyle: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+                          hintStyle: const TextStyle(color: Color.fromARGB(255, 193, 212, 221), fontStyle: FontStyle.italic),
                           prefixIcon: const Icon(
                             Icons.lock,
                             color: Colors.blue,
@@ -198,7 +198,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           filled: true,
                           fillColor: Colors.white.withOpacity(0.2),
                           hintText: 'Ulang Password',
-                          hintStyle: const TextStyle(color: Color.fromARGB(255, 230, 4, 4)),
+                          hintStyle: const TextStyle(color: Color.fromARGB(255, 193, 212, 221), fontStyle: FontStyle.italic),
                           prefixIcon: const Icon(
                             Icons.lock,
                             color: Colors.blue,
@@ -220,10 +220,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Center(                  
                     child: ElevatedButton.icon(
                   onPressed: register,
-                  icon: const Icon(Icons.app_registration, color: Colors.white),
+                  icon: const Icon(Icons.create_outlined, color: Colors.white),
                   label: const Text(
                     'D A F T A R',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
+                    style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 15.0),
@@ -252,8 +252,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     "< Kembali ke halaman login",
                     style: TextStyle(
                         color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 14,                        
                         fontStyle: FontStyle.italic),
                   ),
                 ),

@@ -47,7 +47,13 @@ class _DeviceAddPageState extends State<DeviceAddPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Tambah Perangkat')),
+      appBar: AppBar(
+        title: const Text(
+          'Tambah Perangkat',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.lightBlue,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

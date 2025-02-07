@@ -109,8 +109,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         filled: true,
                         fillColor: Colors.white.withOpacity(0.1),
                         hintText: 'Email',
-                        hintStyle: const TextStyle(color: Colors.blueGrey),
-                        prefixIcon: const Icon(Icons.email, color: Colors.blue),
+                        hintStyle: const TextStyle(color: Color.fromARGB(255, 193, 212, 221), fontStyle: FontStyle.italic),
+                        prefixIcon: const Icon(Icons.email_outlined, color: Colors.blue),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20.0),
                           borderSide: BorderSide.none,
@@ -133,9 +133,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         filled: true,
                         fillColor: Colors.white.withOpacity(0.1),
                         hintText: 'Password',
-                        hintStyle: const TextStyle(color: Colors.blueGrey),
+                        hintStyle: const TextStyle(color: Color.fromARGB(255, 193, 212, 221), fontStyle: FontStyle.italic),
                         prefixIcon: const Icon(
-                          Icons.lock,
+                          Icons.lock_outline,
                           color: Colors.blue,
                         ),
                         border: OutlineInputBorder(
@@ -153,10 +153,10 @@ class _LoginScreenState extends State<LoginScreen> {
               Center(
                   child: ElevatedButton.icon(
                 onPressed: _login,
-                icon: const Icon(Icons.verified, color: Colors.white),
+                icon: const Icon(Icons.verified_outlined, color: Colors.white),
                 label: const Text(
                   'M A S U K',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
                 ),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 15.0),
@@ -181,8 +181,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     "belum punya akun ? daftar di sini",
                     style: TextStyle(
                         color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
                         fontStyle: FontStyle.italic),
                   ),
                 ),

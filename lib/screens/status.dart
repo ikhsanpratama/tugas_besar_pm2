@@ -47,7 +47,7 @@ Future<int> getItemCountByStatus(String status) async {
       .eq('status', status)
       .count(CountOption.exact);
 
-  return response.count ?? 0; // Ensure return type is int
+  return response.count; // Ensure return type is int
 }
 
   List<PieChartSectionData> _buildChartSections() {

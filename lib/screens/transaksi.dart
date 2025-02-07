@@ -1,140 +1,183 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import 'package:printing/printing.dart';
 
-class TransactionPage extends StatefulWidget {
-  final String currentUserId; // ID pengguna yang sedang login
-
-  const TransactionPage({super.key, required this.currentUserId});
+class TransactionReportPage extends StatefulWidget {
+  const TransactionReportPage({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
-  _TransactionPageState createState() => _TransactionPageState();
+  _TransactionReportPageState createState() => _TransactionReportPageState();
 }
 
-class _TransactionPageState extends State<TransactionPage> {
-
+class _TransactionReportPageState extends State<TransactionReportPage> {
   final SupabaseClient supabase = Supabase.instance.client;
-  Map<String, dynamic>? scannedDevice;
-  bool isLoading = false;
+  List<Map<String, dynamic>> transactions = [];
+  DateTime? startDate;
+  DateTime? endDate;
+  bool isLoading = true;
 
-  Future<void> fetchDeviceById(String deviceId) async {
+  @override
+  void initState() {
+    super.initState();
+    fetchTransactions();
+  }
+
+  Future<void> fetchTransactions() async {
     setState(() => isLoading = true);
 
-    final response = await supabase
-        .from('items')
-        .select('*')
-        .eq('id', deviceId)
-        .maybeSingle();
+    var query = supabase
+        .from('transactions')
+        .select('id, item_id, type, quantity, date, notes, items(name)')
+        .order('date', ascending: false);
 
+    if (startDate != null && endDate != null) {
+      query = query.range(startDate!.millisecondsSinceEpoch, endDate!.millisecondsSinceEpoch);
+    }
+
+    final response = await query;
     setState(() {
-      scannedDevice = response;
+      transactions = List<Map<String, dynamic>>.from(response);
       isLoading = false;
     });
   }
 
-  Future<void> processTransaction(String type) async {
-    if (scannedDevice == null) return;
 
-    String deviceId = scannedDevice!['id'];    
 
-    // Simpan transaksi ke tabel transactions
-    await supabase.from('transactions').insert({
-      'item_id': deviceId.toString(),
-      'user_id': widget.currentUserId,
-      'type': type,
-      'date': DateTime.now().toIso8601String(),
-      'notes': type == 'borrow' ? 'Perangkat dipinjam' : 'Perangkat dihapus',
-    });
-
-    // Update status perangkat jika transaksi adalah peminjaman
-    if (type == 'borrow') {
-      await supabase
-          .from('items')
-          .update({'status': 'in use'}).match({'id': deviceId});
-    } else if (type == 'delete') {
-      await supabase.from('items').delete().match({'id': deviceId});
-    }
-
-    setState(() {
-      scannedDevice = null;
-    });
-
-    // ignore: use_build_context_synchronously
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-          content: Text(
-              type == 'borrow' ? 'Perangkat dipinjam' : 'Perangkat dihapus')),
+  void showTransactionDetails(Map<String, dynamic> transaction) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Detail Transaksi'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Perangkat: ${transaction['items']['name']}'),
+              Text('Jenis: ${transaction['type']}'),
+              Text('Jumlah: ${transaction['quantity']}'),
+              Text('Tanggal: ${DateFormat('yyyy-MM-dd HH:mm').format(DateTime.parse(transaction['date']))}'),
+              Text('Catatan: ${transaction['notes'] ?? 'Tidak ada catatan'}'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Tutup'),
+            ),
+          ],
+        );
+      },
     );
+  }
+
+  Future<void> generatePdfReport() async {
+    final pdf = pw.Document();
+
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text('Laporan Transaksi Perangkat', style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
+              pw.SizedBox(height: 10),
+              pw.TableHelper.fromTextArray(
+                headers: ['Perangkat', 'Jenis', 'Jumlah', 'Tanggal'],
+                data: transactions.map((tx) => [
+                  tx['items']['name'],
+                  tx['type'],
+                  tx['quantity'].toString(),
+                  DateFormat('yyyy-MM-dd HH:mm').format(DateTime.parse(tx['date']))
+                ]).toList(),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+
+    final output = await getExternalStorageDirectory();
+    final file = File('${output!.path}/Laporan_Transaksi.pdf');
+    await file.writeAsBytes(await pdf.save());
+
+    await Printing.layoutPdf(onLayout: (format) async => pdf.save());
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Transaksi Perangkat',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Colors.lightBlue,
-      ),
-      body: Column(       
+      appBar: AppBar(title: const Text('Laporan Transaksi Perangkat')),
+      body: Column(
         children: [
-          const SizedBox(
-            height: 50,
-          ),
-          Expanded(
-            flex: 2,
-            child:            
-              MobileScanner(
-                fit: BoxFit.cover,                 
-                onDetect: (capture) async {
-                  final List<Barcode> barcodes = capture.barcodes;
-                  if (barcodes.isNotEmpty) {
-                    String deviceId = barcodes.first.rawValue ?? "";
-                    if (deviceId.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("QR Code tidak valid!")),
-                      );
-                      return;
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    DateTime? picked = await showDatePicker(
+                      context: context,
+                      initialDate: startDate ?? DateTime.now(),
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime.now(),
+                    );
+                    if (picked != null) {
+                      setState(() => startDate = picked);
+                      fetchTransactions();
                     }
-                    await fetchDeviceById(deviceId);
-                  }
-                },
-              ),
+                  },
+                  child: Text(startDate == null ? 'Dari' : DateFormat('yyyy-MM-dd').format(startDate!)),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    DateTime? picked = await showDatePicker(
+                      context: context,
+                      initialDate: endDate ?? DateTime.now(),
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime.now(),
+                    );
+                    if (picked != null) {
+                      setState(() => endDate = picked);
+                      fetchTransactions();
+                    }
+                  },
+                  child: Text(endDate == null ? 'Sampai' : DateFormat('yyyy-MM-dd').format(endDate!)),
+                ),
+                ElevatedButton(
+                  onPressed: generatePdfReport,
+                  child: const Icon(Icons.print),
+                ),
+              ],
+            ),
           ),
           Expanded(
-            flex: 3,
             child: isLoading
                 ? const Center(child: CircularProgressIndicator())
-                : scannedDevice != null
-                    ? Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('Perangkat: ${scannedDevice!['name']}',
-                              style: const TextStyle(fontSize: 18)),
-                          Text('Status: ${scannedDevice!['status']}'),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ElevatedButton(
-                                onPressed: () => processTransaction('borrow'),
-                                child: const Text('Pinjam'),
-                              ),
-                              const SizedBox(width: 10),
-                              ElevatedButton(
-                                onPressed: () => processTransaction('delete'),
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.red),
-                                child: const Text('Hapus',
-                                    style: TextStyle(color: Colors.white)),
-                              ),
-                            ],
+                : ListView.builder(
+                    itemCount: transactions.length,
+                    itemBuilder: (context, index) {
+                      final transaction = transactions[index];
+                      return Card(
+                        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        child: ListTile(
+                          title: Text(transaction['items']['name']),
+                          subtitle: Text(
+                            '${transaction['type']} | ${transaction['quantity']} item\n${DateFormat('yyyy-MM-dd HH:mm').format(DateTime.parse(transaction['date']))}',
                           ),
-                        ],
-                      )
-                    : const Center(child: Text('Scan QR Code perangkat')),
+                          trailing: const Icon(Icons.info_outline),
+                          onTap: () => showTransactionDetails(transaction),
+                        ),
+                      );
+                    },
+                  ),
           ),
         ],
       ),

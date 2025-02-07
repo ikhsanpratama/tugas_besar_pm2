@@ -4,10 +4,7 @@ import 'package:tugas_besar_pm2/screens/account/user_management.dart';
 import 'package:tugas_besar_pm2/screens/auth/auth_service.dart';
 import 'package:tugas_besar_pm2/screens/categories.dart';
 import 'package:tugas_besar_pm2/screens/devices/device_list_page.dart';
-// import 'package:tugas_besar_pm2/screens/about.dart';
-// import 'package:tugas_besar_pm2/screens/category_form.dart';
-import 'package:tugas_besar_pm2/screens/opname.dart';
-import 'package:tugas_besar_pm2/screens/perangkat.dart';
+import 'package:tugas_besar_pm2/screens/maintenance_history_page.dart';
 import 'package:tugas_besar_pm2/screens/status.dart';
 import 'package:tugas_besar_pm2/screens/transaksi.dart';
 
@@ -29,7 +26,7 @@ class HomePage extends StatelessWidget {
       'title': 'Status Perangkat',
       'icon': Icons.data_usage,
       'color': Colors.redAccent,
-      'page': const StatusPerangkat()
+      'page': const DeviceStatisticsPage()
     },
     {
       'title': 'Transaksi',
@@ -43,7 +40,7 @@ class HomePage extends StatelessWidget {
       'title': 'Maintenance',
       'icon': Icons.widgets,
       'color': Colors.green,
-      'page': const OpnamePerangkat()
+      'page': const MaintenanceHistoryPage()
     },
   ];
 

@@ -13,6 +13,9 @@ class TransactionPage extends StatefulWidget {
 }
 
 class _TransactionPageState extends State<TransactionPage> {
+  final MobileScannerController controller = MobileScannerController(
+    formats: const [BarcodeFormat.qrCode],
+  );
   final SupabaseClient supabase = Supabase.instance.client;
   Map<String, dynamic>? scannedDevice;
   bool isLoading = false;
@@ -35,8 +38,7 @@ class _TransactionPageState extends State<TransactionPage> {
   Future<void> processTransaction(String type) async {
     if (scannedDevice == null) return;
 
-    String deviceId = scannedDevice!['id'];
-    print("QR Code Scanned: $deviceId");
+    String deviceId = scannedDevice!['id'];    
 
     // Simpan transaksi ke tabel transactions
     await supabase.from('transactions').insert({
@@ -70,28 +72,59 @@ class _TransactionPageState extends State<TransactionPage> {
 
   @override
   Widget build(BuildContext context) {
+    final scanWindow = Rect.fromCenter(
+      center: MediaQuery.sizeOf(context).center(Offset.zero),
+      width: 200,
+      height: 200,
+    );
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Transaksi Perangkat')),
-      body: Column(
+      appBar: AppBar(
+        title: const Text(
+          'Transaksi Perangkat',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.lightBlue,
+      ),
+      body: Column(       
         children: [
+          const SizedBox(
+            height: 50,
+          ),
           Expanded(
             flex: 2,
-            child: MobileScanner(
-              onDetect: (capture) async {
-                final List<Barcode> barcodes = capture.barcodes;
-                if (barcodes.isNotEmpty) {
-                  String deviceId = barcodes.first.rawValue ?? "";
-                  print("QR Code Scanned: $deviceId");
-                  if (deviceId.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("QR Code tidak valid!")),
-                    );
-                    return;
-                  }
-                  await fetchDeviceById(deviceId);
-                }
-              },
-            ),
+            child:            
+              Container(
+                width: 300,
+                height: 300,
+                decoration: BoxDecoration(                  
+                  borderRadius: BorderRadius.circular(5.0),
+                  border: Border.all(
+                    color: const Color.fromARGB(255, 128, 127, 127),
+                    width: 8.0,
+                    style: BorderStyle.solid,
+                  ),
+                ),
+                child:
+                  MobileScanner(
+                    fit: BoxFit.cover,
+                    controller: controller,
+                    scanWindow: scanWindow,
+                    onDetect: (capture) async {
+                      final List<Barcode> barcodes = capture.barcodes;
+                      if (barcodes.isNotEmpty) {
+                        String deviceId = barcodes.first.rawValue ?? "";
+                        if (deviceId.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("QR Code tidak valid!")),
+                          );
+                          return;
+                        }
+                        await fetchDeviceById(deviceId);
+                      }
+                    },
+                  ),                  
+              ),
           ),
           Expanded(
             flex: 3,

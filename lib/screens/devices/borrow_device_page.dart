@@ -37,7 +37,13 @@ class _BorrowDevicePageState extends State<BorrowDevicePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Pinjam Perangkat')),
+      appBar: AppBar(
+        title: const Text(
+          'Pinjam Perangkat',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.lightBlue,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

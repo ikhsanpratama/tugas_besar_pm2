@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scrollable_text_indicator/scrollable_text_indicator.dart';
 
 class AboutUts extends StatelessWidget {
   const AboutUts({super.key});
@@ -37,7 +38,7 @@ class AboutUts extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             const Text(
-              'Tugas UTS Mata Kuliah Pemograman Mobile 2 - FLutter',
+              'Tugas Besar Mata Kuliah Pemograman Mobile 2 - FLutter',
               style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
             ),
             const SizedBox(height: 10),
@@ -46,14 +47,19 @@ class AboutUts extends StatelessWidget {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 30),
-            const Text(
-              'Aplikasi ini dirancang untuk mencatat, mengelola, dan memantau perangkat IT seperti access point, server, router, atau perangkat lainnya. Aplikasi ini memungkinkan pengguna untuk memantau status perangkat, mengelola peminjaman, dan menghasilkan laporan inventaris.',
-              style: TextStyle(fontSize: 14, color: Colors.black54),
-              textAlign: TextAlign.justify,
+            const Expanded(
+              child: ScrollableTextIndicator(                
+                text: Text(
+                  'Tujuan Pembuatan Aplikasi ini untuk mencatat, mengelola, dan memantau perangkat IT seperti access point, server, router, atau perangkat lainnya. Aplikasi ini memungkinkan pengguna untuk melihat status perangkat, mengelola peminjaman, melakukan pemeliharaan pada perangkat, dan membuat laporan-laporan terkait perangkat.',
+                  style: TextStyle(fontSize: 16, color: Colors.black),
+                  textAlign: TextAlign.justify,
+                ),
+                indicatorBarColor: Colors.amber,
+              ),
             ),
             const SizedBox(height: 30),
             const Text(
-              'Version 0.3.0',
+              'Version 1.0.0',
               style: TextStyle(
                   fontSize: 12,
                   color: Colors.grey,

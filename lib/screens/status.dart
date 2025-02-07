@@ -1,111 +1,129 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-class StatusPerangkat extends StatelessWidget {
-  const StatusPerangkat({super.key});
+class DeviceStatisticsPage extends StatefulWidget {
+  const DeviceStatisticsPage({super.key});
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _DeviceStatisticsPageState createState() => _DeviceStatisticsPageState();
+}
+
+class _DeviceStatisticsPageState extends State<DeviceStatisticsPage> {
+  final SupabaseClient supabase = Supabase.instance.client;
+  int available = 0;
+  int inUse = 0;
+  int maintenance = 0;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDeviceStatistics();
+  }
+
+  Future<void> fetchDeviceStatistics() async {
+  try {
+    final availableCount = await getItemCountByStatus('available');
+    final inUseCount = await getItemCountByStatus('in use');
+    final maintenanceCount = await getItemCountByStatus('maintenance');
+
+    setState(() {
+      available = availableCount;
+      inUse = inUseCount;
+      maintenance = maintenanceCount;
+      isLoading = false;
+    });
+  // ignore: empty_catches
+  } catch (e) {
+  }
+}
+
+Future<int> getItemCountByStatus(String status) async {
+  final response = await supabase
+      .from('items')
+      .select()
+      .eq('status', status)
+      .count(CountOption.exact);
+
+  return response.count ?? 0; // Ensure return type is int
+}
+
+  List<PieChartSectionData> _buildChartSections() {
+    return [
+      PieChartSectionData(
+        color: Colors.green,
+        value: available.toDouble(),
+        title: '',
+        radius: 50,
+        titleStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+      ),
+      PieChartSectionData(
+        color: Colors.blue,
+        value: inUse.toDouble(),
+        title: '',
+        radius: 50,
+        titleStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+      ),
+      PieChartSectionData(
+        color: Colors.red,
+        value: maintenance.toDouble(),
+        title: '',
+        radius: 50,
+        titleStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Status Perangkat",
+          'Status Perangkat',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.lightBlue,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Section: Ringkasan Statistik
-              const Text(
-                "Ringkasan Statistik",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildStatisticCard("Total", "120", Colors.blue),
-                  _buildStatisticCard("Aktif", "95", Colors.green),
-                  _buildStatisticCard("Rusak", "25", Colors.red),
-                ],
-              ),
-              const SizedBox(height: 20),
-              // Section: Grafik Status Perangkat
-              const Text(
-                "Grafik Status Perangkat",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              AspectRatio(
-                aspectRatio: 1.5,
-                child: PieChart(
-                  PieChartData(
-                    sections: [
-                      PieChartSectionData(
-                        value: 95,
-                        title: "Aktif",
-                        color: Colors.green,
-                        radius: 60,
-                        titleStyle: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
-                      PieChartSectionData(
-                        value: 25,
-                        title: "Rusak",
-                        color: Colors.red,
-                        radius: 60,
-                        titleStyle: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
-                    ],
-                    sectionsSpace: 4,
-                    centerSpaceRadius: 40,
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Perangkat',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  height: 200,
+                  child: PieChart(
+                    PieChartData(
+                      sections: _buildChartSections(),
+                      sectionsSpace: 2,
+                      centerSpaceRadius: 40,
+                      borderData: FlBorderData(show: false),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      ),
+                const SizedBox(height: 20),
+                _buildStatCard('Available', Colors.green, available),
+                _buildStatCard('In Use', Colors.blue, inUse),
+                _buildStatCard('Maintenance', Colors.red, maintenance),
+              ],
+            ),
     );
-  }
+  } 
 
-  Widget _buildStatisticCard(String title, String value, Color color) {
-    return Expanded(
-      child: Card(
-        color: color,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(fontSize: 14, color: Colors.white),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 10),
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-        ),
+  Widget _buildStatCard(String label, Color color, int count) {
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: ListTile(
+        leading: CircleAvatar(backgroundColor: color, radius: 10),
+        title: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+        trailing: Text('$count', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
       ),
     );
   }

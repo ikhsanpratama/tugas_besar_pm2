@@ -22,15 +22,7 @@ class _DeviceListPageState extends State<DeviceListPage> {
     super.initState();
     fetchDevices();
   }
-
-  // Future<void> fetchDevices() async {
-  //   final response = await supabase
-  //       .from('items')
-  //       .select('id, name, description, status, categories(name)');
-  //   setState(() {
-  //     devices = List<Map<String, dynamic>>.from(response);
-  //   });
-  // }
+  
   Future<void> fetchDevices() async {
     final response = await supabase
         .from('items')
@@ -68,7 +60,13 @@ class _DeviceListPageState extends State<DeviceListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Daftar Perangkat')),
+      appBar: AppBar(
+        title: const Text(
+          'Daftar Perangkat',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.lightBlue,
+      ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : categorizedDevices.isEmpty

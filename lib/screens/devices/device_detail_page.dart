@@ -4,7 +4,6 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:tugas_besar_pm2/screens/devices/borrow_device_page.dart';
-import 'package:tugas_besar_pm2/screens/transaksi.dart';
 import 'maintain_device_page.dart';
 
 class DeviceDetailPage extends StatelessWidget {
@@ -50,7 +49,13 @@ class DeviceDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Detail Perangkat')),
+      appBar: AppBar(
+        title: const Text(
+          'Detail Perangkat',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.lightBlue,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

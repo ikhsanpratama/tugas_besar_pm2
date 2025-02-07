@@ -38,7 +38,7 @@ class _CategoryFormScreenState extends State<CategoryFormScreen> {
     if (widget.category == null) {
       // Create new category
       try{
-        final response = await _supabase.from('categories').insert({
+        await _supabase.from('categories').insert({
         'name': name,
         });
         Navigator.pushReplacement(
@@ -52,7 +52,7 @@ class _CategoryFormScreenState extends State<CategoryFormScreen> {
     } else {
       // Update existing category
       try{
-      final response = await _supabase.from('categories').update({
+      await _supabase.from('categories').update({
               'name': name,
             }).eq('id', widget.category!['id']);
       Navigator.pushReplacement(

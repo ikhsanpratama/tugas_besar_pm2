@@ -13,9 +13,7 @@ class TransactionPage extends StatefulWidget {
 }
 
 class _TransactionPageState extends State<TransactionPage> {
-  final MobileScannerController controller = MobileScannerController(
-    formats: const [BarcodeFormat.qrCode],
-  );
+
   final SupabaseClient supabase = Supabase.instance.client;
   Map<String, dynamic>? scannedDevice;
   bool isLoading = false;
@@ -72,11 +70,6 @@ class _TransactionPageState extends State<TransactionPage> {
 
   @override
   Widget build(BuildContext context) {
-    final scanWindow = Rect.fromCenter(
-      center: MediaQuery.sizeOf(context).center(Offset.zero),
-      width: 200,
-      height: 200,
-    );
 
     return Scaffold(
       appBar: AppBar(
@@ -94,36 +87,21 @@ class _TransactionPageState extends State<TransactionPage> {
           Expanded(
             flex: 2,
             child:            
-              Container(
-                width: 300,
-                height: 300,
-                decoration: BoxDecoration(                  
-                  borderRadius: BorderRadius.circular(5.0),
-                  border: Border.all(
-                    color: const Color.fromARGB(255, 128, 127, 127),
-                    width: 8.0,
-                    style: BorderStyle.solid,
-                  ),
-                ),
-                child:
-                  MobileScanner(
-                    fit: BoxFit.cover,
-                    controller: controller,
-                    scanWindow: scanWindow,
-                    onDetect: (capture) async {
-                      final List<Barcode> barcodes = capture.barcodes;
-                      if (barcodes.isNotEmpty) {
-                        String deviceId = barcodes.first.rawValue ?? "";
-                        if (deviceId.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("QR Code tidak valid!")),
-                          );
-                          return;
-                        }
-                        await fetchDeviceById(deviceId);
-                      }
-                    },
-                  ),                  
+              MobileScanner(
+                fit: BoxFit.cover,                 
+                onDetect: (capture) async {
+                  final List<Barcode> barcodes = capture.barcodes;
+                  if (barcodes.isNotEmpty) {
+                    String deviceId = barcodes.first.rawValue ?? "";
+                    if (deviceId.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("QR Code tidak valid!")),
+                      );
+                      return;
+                    }
+                    await fetchDeviceById(deviceId);
+                  }
+                },
               ),
           ),
           Expanded(

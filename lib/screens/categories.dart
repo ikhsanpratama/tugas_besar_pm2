@@ -69,7 +69,7 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
   }
 
   Future<void> deleteCategory(String id) async {
-    final response = await Supabase.instance.client.from('categories').delete().eq('id', id);
+    await Supabase.instance.client.from('categories').delete().eq('id', id);
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const CategoryListScreen()),

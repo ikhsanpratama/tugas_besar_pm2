@@ -20,6 +20,11 @@ class _LoginScreenState extends State<LoginScreen> {
     final email = _emailController.text;
     final password = _passwordController.text;
 
+    if(email.isEmpty || password.isEmpty){
+      ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Email & Password tidak boleh kosong")));
+      return;
+    }
     // login attempt
     try {
       await authService.signInEmailPassword(email, password);

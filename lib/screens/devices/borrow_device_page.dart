@@ -34,8 +34,28 @@ class _BorrowDevicePageState extends State<BorrowDevicePage> {
         .showSnackBar(const SnackBar(content: Text('Perangkat dipinjam!')));
   }
 
+  Future<void> returnDevice() async {
+    await supabase.from('transactions').insert({
+      'item_id': widget.device['id'],
+      'user_id': supabase.auth.currentUser?.id,
+      'type': 'return',
+      'notes': notesController.text,
+    });
+
+    await supabase
+        .from('items')
+        .update({'status': 'available'}).match({'id': widget.device['id']});
+
+    // ignore: use_build_context_synchronously
+    Navigator.pop(context);
+    // ignore: use_build_context_synchronously
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('Perangkat dipinjam!')));
+  }
+
   @override
   Widget build(BuildContext context) {
+    bool inUse = widget.device['status'] == 'in use';
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -54,8 +74,13 @@ class _BorrowDevicePageState extends State<BorrowDevicePage> {
                 controller: notesController,
                 decoration: const InputDecoration(labelText: 'Catatan')),
             const SizedBox(height: 20),
-            ElevatedButton(
-                onPressed: borrowDevice, child: const Text('Pinjam Sekarang')),
+            inUse
+                ? ElevatedButton(
+                    onPressed: inUse ? returnDevice : borrowDevice,
+                    child: const Text('Kembalikan'))
+                : ElevatedButton(
+                    onPressed: inUse ? returnDevice : borrowDevice,
+                    child: const Text('Pinjam')),
           ],
         ),
       ),

@@ -48,6 +48,10 @@ class DeviceDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isInUse = device['status'] == 'in use'; // 🔹 Status "in use"
+    bool isMaintenance =
+        device['status'] == 'maintenance'; // 🔹 Status "maintenance"
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -89,27 +93,30 @@ class DeviceDetailPage extends StatelessWidget {
                 ElevatedButton.icon(
                   icon: const Icon(Icons.assignment),
                   label: const Text('Transaksi'),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              // BorrowDevicePage(device: device)),
-                              BorrowDevicePage(device: device)),
-                    );
-                  },
+                  onPressed: isMaintenance
+                      ? null // 🔹 Disabled jika status "maintenance"
+                      : () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    BorrowDevicePage(device: device)),
+                          );
+                        },
                 ),
                 ElevatedButton.icon(
                   icon: const Icon(Icons.build),
                   label: const Text('Pemeliharaan'),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              MaintainDevicePage(device: device)),
-                    );
-                  },
+                  onPressed: isInUse
+                      ? null // 🔹 Disabled jika status "in use"
+                      : () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    MaintainDevicePage(device: device)),
+                          );
+                        },
                 ),
               ],
             ),

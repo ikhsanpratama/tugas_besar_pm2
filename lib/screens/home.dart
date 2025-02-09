@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tugas_besar_pm2/screens/about.dart';
 import 'package:tugas_besar_pm2/screens/account/user_management.dart';
+import 'package:tugas_besar_pm2/screens/account/user_profile.dart';
 import 'package:tugas_besar_pm2/screens/auth/auth_service.dart';
 import 'package:tugas_besar_pm2/screens/categories.dart';
 import 'package:tugas_besar_pm2/screens/devices/device_list_page.dart';
@@ -138,6 +139,16 @@ class HomePage extends StatelessWidget {
                   );
                 }
                 return const SizedBox(); // Tidak menampilkan apa pun jika bukan admin
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Profil Saya'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ProfilePage()),
+                );
               },
             ),
             ListTile(

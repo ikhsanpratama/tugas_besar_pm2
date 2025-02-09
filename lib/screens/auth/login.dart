@@ -20,9 +20,9 @@ class _LoginScreenState extends State<LoginScreen> {
     final email = _emailController.text;
     final password = _passwordController.text;
 
-    if(email.isEmpty || password.isEmpty){
-      ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("Email & Password tidak boleh kosong")));
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Email & Password tidak boleh kosong")));
       return;
     }
     // login attempt
@@ -63,130 +63,140 @@ class _LoginScreenState extends State<LoginScreen> {
           Container(
             color: Colors.black.withOpacity(0.6),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 50.h,
-              ),
-              const Center(
-                  child: Text(
-                "IT INVENTORY MOBILE",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold),
-              )),
-              SizedBox(
-                height: 20.h,
-              ),
-              Center(
-                child: Image.asset(
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 50.h,
+                ),
+                const Center(
+                    child: Text(
+                  "IT INVENTORY MOBILE",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold),
+                )),
+                SizedBox(
+                  height: 20.h,
+                ),
+                Center(
+                    child: Image.asset(
                   "assets/inventory.png",
                   fit: BoxFit.cover,
                   height: 250,
                   width: 400,
                   alignment: Alignment.center,
-                )
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              Card(
-                color: Colors.transparent,
-                borderOnForeground: true,
-                elevation: 10,
-                child: Column(
-                  children: [
-                    TextFormField(
-                      textAlign: TextAlign.left,
-                      style: const TextStyle(
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white.withOpacity(0.1),
-                        hintText: 'Email',
-                        hintStyle: const TextStyle(color: Color.fromARGB(255, 193, 212, 221), fontStyle: FontStyle.italic),
-                        prefixIcon: const Icon(Icons.email_outlined, color: Colors.blue),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                          borderSide: BorderSide.none,
+                )),
+                SizedBox(
+                  height: 20.h,
+                ),
+                Card(
+                  color: Colors.transparent,
+                  borderOnForeground: true,
+                  elevation: 10,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        textAlign: TextAlign.left,
+                        style: const TextStyle(
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white.withOpacity(0.1),
+                          hintText: 'Email',
+                          hintStyle: const TextStyle(
+                              color: Color.fromARGB(255, 193, 212, 221),
+                              fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(Icons.email_outlined,
+                              color: Colors.blue),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: BorderSide.none,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 10.h,
-                    ),
-                    TextFormField(
-                      textAlign: TextAlign.left,
-                      style: const TextStyle(
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                      controller: _passwordController,
-                      obscureText: true,
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white.withOpacity(0.1),
-                        hintText: 'Password',
-                        hintStyle: const TextStyle(color: Color.fromARGB(255, 193, 212, 221), fontStyle: FontStyle.italic),
-                        prefixIcon: const Icon(
-                          Icons.lock_outline,
-                          color: Colors.blue,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                          borderSide: BorderSide.none,
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      TextFormField(
+                        textAlign: TextAlign.left,
+                        style: const TextStyle(
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                        controller: _passwordController,
+                        obscureText: true,
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white.withOpacity(0.1),
+                          hintText: 'Password',
+                          hintStyle: const TextStyle(
+                              color: Color.fromARGB(255, 193, 212, 221),
+                              fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(
+                            Icons.lock_outline,
+                            color: Colors.blue,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: BorderSide.none,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              Center(
-                  child: ElevatedButton.icon(
-                onPressed: _login,
-                icon: const Icon(Icons.verified_outlined, color: Colors.white),
-                label: const Text(
-                  'M A S U K',
-                  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 15.0),
-                  backgroundColor: Colors.blueAccent,
-                  minimumSize: const Size(double.infinity, 10),
-                  elevation: 8,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
+                    ],
                   ),
                 ),
-              )),
-              SizedBox(
-                height: 20.h,
-              ),
-              GestureDetector(
-                onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const RegisterScreen())),
-                child: const Center(
-                  child: Text(
-                    "belum punya akun ? daftar di sini",
+                SizedBox(
+                  height: 20.h,
+                ),
+                Center(
+                    child: ElevatedButton.icon(
+                  onPressed: _login,
+                  icon:
+                      const Icon(Icons.verified_outlined, color: Colors.white),
+                  label: const Text(
+                    'M A S U K',
                     style: TextStyle(
+                        fontSize: 18,
                         color: Colors.white,
-                        fontSize: 14,
-                        fontStyle: FontStyle.italic),
+                        fontWeight: FontWeight.bold),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 15.0),
+                    backgroundColor: Colors.blueAccent,
+                    minimumSize: const Size(double.infinity, 10),
+                    elevation: 8,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                  ),
+                )),
+                SizedBox(
+                  height: 20.h,
+                ),
+                GestureDetector(
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const RegisterScreen())),
+                  child: const Center(
+                    child: Text(
+                      "belum punya akun ? daftar di sini",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontStyle: FontStyle.italic),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           )
         ],
       ),

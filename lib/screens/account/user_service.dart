@@ -12,9 +12,9 @@ class UserService {
         .from('users')
         .select('id, name, email, role')
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
 
-    return response;
+    return response ?? {};
   }
 
   // 🔹 2. Perbarui Profil User
@@ -22,10 +22,13 @@ class UserService {
     final user = supabase.auth.currentUser;
     if (user == null) return false;
 
-    final response =
-        await supabase.from('users').update({'name': name}).eq('id', user.id);
+    final response = await supabase
+        .from('users')
+        .update({'name': name})
+        .eq('id', user.id)
+        .select();
 
-    return response.isEmpty ? false : true;
+    return response.isNotEmpty;
   }
 
   // 🔹 3. Hapus Akun User

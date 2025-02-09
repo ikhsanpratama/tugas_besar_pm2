@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tugas_besar_pm2/screens/home.dart';
 import 'user_service.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -42,7 +43,11 @@ class _ProfilePageState extends State<ProfilePage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Profil berhasil diperbarui!')),
       );
-      loadUserProfile(); // Refresh profil setelah update
+      Navigator.push(
+        // ignore: use_build_context_synchronously
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      ); // Refresh profil setelah update
     } else {
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(

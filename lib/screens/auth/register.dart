@@ -45,6 +45,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           'id': user.id, // Link profile to user
           'name': username,
           'email': user.email,
+          'role': "staff",
         });
       }
       // ignore: use_build_context_synchronously

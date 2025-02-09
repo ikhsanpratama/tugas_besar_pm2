@@ -118,16 +118,26 @@ class HomePage extends StatelessWidget {
                 null;
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.people),
-              title: const Text('Pengguna'),
-              // trailing: current,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const UserManagementPage()),
-                );
+            FutureBuilder<String?>(
+              future: authService.getUserRole(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const SizedBox(); // Tampilkan loading kecil jika masih menunggu
+                }
+                if (snapshot.hasData && snapshot.data == 'admin') {
+                  return ListTile(
+                    leading: const Icon(Icons.people),
+                    title: const Text('Pengguna'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const UserManagementPage()),
+                      );
+                    },
+                  );
+                }
+                return const SizedBox(); // Tidak menampilkan apa pun jika bukan admin
               },
             ),
             ListTile(

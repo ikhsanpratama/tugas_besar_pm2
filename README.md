@@ -42,8 +42,8 @@ Rencana Pengembangan
 Team Role 
 
 1.Rara Yulia Insani
-    -  Quality Assurance
-    -  Technical Writer
+  Quality Assurance
+  Technical Writer
 2.⁠Ikhsan Pratama
     -  Project Manager
     -  Frontend Developer
